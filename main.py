@@ -1,7 +1,4 @@
-'''
-main file
-'''
-from agents import Human
+from agents import Agent, Human
 
 agent = Human()
 
