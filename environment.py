@@ -1,5 +1,6 @@
 import pygame
 import math
+import random
 
 class Pixel:
     def __init__(self, screen, color, pos, size=8):
@@ -9,26 +10,34 @@ class Pixel:
         self.size = size
     def update(self):
         pygame.draw.circle(self.screen, self.color, self.pos, self.size)
+    def getSize(self):
+        return self.size
 
-screen = pygame.display.set_mode((800, 650))
+class Graphics:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.pixels = []
 
-pixels = []
-x, y = 300, 200
-step = 20
-angle = 0
-for i in range(36):
-    x -= math.sin(angle*math.pi/180) * step
-    y += math.cos(angle*math.pi/180) * step 
-    angle += 10
-    pixels.append(Pixel(screen, "orange", (x, y)))
+        self.screen = pygame.display.set_mode((self.width, self.height))
 
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    def drawHuman(self):
+        for i in range(10):
+            x = Pixel.getSize()/2 + random.random()*(self.width-Pixel.getSize()/2)
+            y = Pixel.getSize()/2 + random.random()*(self.height-Pixel.getSize()/2)
+            self.pixels.append(Pixel(self.screen, "orange", (x, y)))
 
-    screen.fill(0)
-    for p in pixels:
-        p.update()
-    pygame.display.update()
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+            self.screen.fill(0)
+            for p in self.pixels:
+                p.update()
+            pygame.display.update()
+
+    def simulate(self):
+        while True:
+            1
