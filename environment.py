@@ -1,43 +1,23 @@
 import pygame
-import math
-import random
+from agents import Agent
 
-class Pixel:
-    def __init__(self, screen, color, pos, size=8):
-        self.screen = screen
-        self.color = color
-        self.pos = pos
-        self.size = size
+class Environment:
+    def __init__(self, agents, dt=0.1, sime_time=1000, xMin=0, xMax=1000, yMin=0, yMax=1000):
+        self.xMin = xMin
+        self.xMax = xMax
+        self.yMin = yMin
+        self.yMax = yMax
+        self.agents = agents
+        self.dt = dt
+        self.sime_time = sime_time
+
     def update(self):
-        pygame.draw.circle(self.screen, self.color, self.pos, self.size)
-    def getSize(self):
-        return self.size
+        for agent in self.agents:
+            agent.step(self.dt)
 
-class Graphics:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-        self.pixels = []
+    def run(self):
+        time = 0
+        while(time < self.sime_time):
+            time += self.dt
 
-        self.screen = pygame.display.set_mode((self.width, self.height))
-
-    def drawHuman(self):
-        for i in range(10):
-            x = Pixel.getSize()/2 + random.random()*(self.width-Pixel.getSize()/2)
-            y = Pixel.getSize()/2 + random.random()*(self.height-Pixel.getSize()/2)
-            self.pixels.append(Pixel(self.screen, "orange", (x, y)))
-
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-
-            self.screen.fill(0)
-            for p in self.pixels:
-                p.update()
-            pygame.display.update()
-
-    def simulate(self):
-        while True:
-            1
+        
