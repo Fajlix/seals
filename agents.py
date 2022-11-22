@@ -39,7 +39,7 @@ class Agent:
             healing = np.min([self.health + healing,self.max_health])
     def step(self,dt):
         self.acceleration += (self.external_force + self.attractive_force + self.internal_force)/self.mass
-        self.velocity += self.acceleration
+        self.velocity += self.acceleration*dt
         self.position += self.velocity*dt
         self.apply_pressure(dt)
     
