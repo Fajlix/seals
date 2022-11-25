@@ -11,7 +11,8 @@ class Agent:
         self.acceleration = np.array([0.0, 0.0])
         self.external_force = np.array([0.0,0.0])
         # Towards ex stage, exit, etc
-        self.attractive_force = np.array([0.0,0.0])
+        self.attractive_force_magnitude = 0
+        self.attraction_angle = 0
         #For example friction, other
         self.internal_force = np.array([0.0,0.0])
         self.p_max = p_max
@@ -42,6 +43,14 @@ class Agent:
         self.velocity += self.acceleration*dt
         self.position += self.velocity*dt
         self.apply_pressure(dt)
-    
+
+    def attraction_towards_stage(self, point_of_attraction, attractive_force_magnitude):
+        self.attraction_angle = np.arctan((point_of_attraction[1]-self.position[1])/(point_of_attraction[0]-self.position[0]))
+        self.attractive_force_magnitude = attractive_force_magnitude
+
+
+
+
+
 
 
