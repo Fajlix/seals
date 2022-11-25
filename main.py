@@ -1,8 +1,15 @@
 '''
 main file
 '''
-from agents import Human
+from draw import *
+import random
 
-agent = Human()
+positions = []
+for i in range(10):
+    x = random.randint(8/2, 1000 - 8/2)
+    y = random.randint(8/2, 1000 - 8/2)
+    positions.append((x,y))
 
-print(agent)
+graphic = Graphics(1000, 1000)
+
+graphic.drawHuman(positions)
