@@ -2,7 +2,7 @@ import pygame
 from agents import Agent
 
 class Environment:
-    def __init__(self, agents, dt=0.1, sime_time=1000, xMin=0, xMax=1000, yMin=0, yMax=1000):
+    def __init__(self, agents:Agent, dt=0.1, sime_time=1000, xMin=0, xMax=1000, yMin=0, yMax=1000):
         self.xMin = xMin
         self.xMax = xMax
         self.yMin = yMin
@@ -15,9 +15,5 @@ class Environment:
         for agent in self.agents:
             agent.step(self.dt)
 
-    def run(self):
-        time = 0
-        while(time < self.sime_time):
-            time += self.dt
-
-        
+    def getAgentPos(self):
+        return [agent.position for agent in self.agents]

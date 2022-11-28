@@ -2,14 +2,24 @@
 main file
 '''
 from draw import *
+from crowdPhysics import *
+from environment import *
 import random
 
-positions = []
+agents = []
+
 for i in range(10):
     x = random.randint(8/2, 1000 - 8/2)
     y = random.randint(8/2, 1000 - 8/2)
-    positions.append((x,y))
+    agents.append(Agent(x,y))
+
+env = Environment(agents)
 
 graphic = Graphics(1000, 1000)
 
-graphic.drawHuman(positions)
+graphic.drawHuman(env.getAgentPos())
+
+time = 0
+while(True):
+    env.update()
+    graphic.drawHuman(env.getAgentPos())
