@@ -20,6 +20,15 @@ graphic = Graphics(1000, 1000)
 graphic.drawHuman(env.getAgentPos())
 
 time = 0
-while(True):
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    pixels = graphic.getPixels()
+    listOfCollisions = env.checkCollisions(pixels)
+    print(listOfCollisions)
     env.update()
     graphic.drawHuman(env.getAgentPos())
+
