@@ -24,9 +24,11 @@ class Graphics:
         self.screen = pygame.display.set_mode((self.width, self.height))
 
     def drawHuman(self, listOfPos, color="orange"):
+        self.pixels = []
         for pos in listOfPos:
             self.pixels.append(Pixel(self.screen, color, pos, self.pixelSize))
-
+        # green dot in the middle
+        self.pixels.append(Pixel(self.screen, "green", (500, 500), self.pixelSize/4))
         self.screen.fill(0)
         for p in self.pixels:
             p.update()

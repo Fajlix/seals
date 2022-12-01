@@ -39,15 +39,21 @@ class Agent:
             healing = 0.1
             healing = np.min([self.health + healing,self.max_health])
     def step(self,dt):
-        self.attraction_towards_stage((500,0), 10)
-        self.acceleration += (self.external_force + np.array([0,1]) + self.internal_force)/self.mass
+        self.attraction_towards_stage((500,500), 5)
+        self.acceleration = (self.external_force + self.internal_force)/self.mass
         self.velocity += self.acceleration*dt
+        # set max velocity in x and y direction
+        self.velocity[0] = np.min([np.max([self.velocity[0], -2]), 2])
+        self.velocity[1] = np.min([np.max([self.velocity[1], -2]), 2])
+        
         self.position += self.velocity*dt
         self.apply_pressure(dt)
-
     def attraction_towards_stage(self, point_of_attraction, attractive_force_magnitude):
-        self.attraction_angle = np.arctan((point_of_attraction[1]-self.position[1])/(point_of_attraction[0]-self.position[0]))
+        # get the angle between the agent and the point of attraction
+        self.attraction_angle = np.arctan2(point_of_attraction[1] - self.position[1], point_of_attraction[0] - self.position[0])
         self.attractive_force_magnitude = attractive_force_magnitude
+        # calculate the attractive force
+        self.internal_force = np.array([self.attractive_force_magnitude*np.cos(self.attraction_angle), self.attractive_force_magnitude*np.sin(self.attraction_angle)])
 
 
 
