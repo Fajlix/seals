@@ -18,8 +18,8 @@ class Environment:
     def repulsiveForceMagnitude(self, distance, magnitude):
         # shouod be exponential force ?
         if distance <= 0:
-            distane = 10**-10
-        return magnitude**2/distance
+            distance = 10**-10
+        return magnitude/(distance**2)
 
 
     def forcesBetweenAgents(self, listOfCollisions,agent_radius=8, magnitude=10): 
