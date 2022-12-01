@@ -1,30 +1,81 @@
 import pygame
 from agents import Agent
 import numpy as np
-
+from itertools import combinations
+import time
 class Environment:
-    def __init__(self, agents:Agent, dt=0.1, sime_time=1000, xMin=0, xMax=1000, yMin=0, yMax=1000):
+    def __init__(self, agents:list, dt=0.01, sime_time=1000, xMin=0, xMax=1000, yMin=0, yMax=1000):
         self.xMin = xMin
         self.xMax = xMax
         self.yMin = yMin
         self.yMax = yMax
+        if type(agents[0]) is not Agent:
+            raise TypeError("agents should be of type Agent")
         self.agents = agents
         self.dt = dt
+        self.time = 0
         self.sime_time = sime_time
+    def repulsiveForceMagnitude(self, distance, magnitude):
+        # shouod be exponential force ?
+        if distance <= 0:
+            distane = 10**-10
+        return magnitude**2/distance
+
+
+    def forcesBetweenAgents(self, listOfCollisions,agent_radius=8, magnitude=10): 
+        # the force between the agents should exponential to the distance 
+        # list of collisions is a list of agents that are colliding
+        # between them
+        for collision in listOfCollisions:
+            # calculate the distance between the agents
+            pos1 = collision[0].position
+            pos2 = collision[1].position
+            distance = np.sqrt(np.power(pos2[0]-pos1[0],2) + np.power(pos2[1]-pos1[1],2))
+            distance = distance - 2*agent_radius
+            # calculate the force between the agents
+            force = self.repulsiveForceMagnitude(distance, magnitude)
+            # calculate the direction of the force
+            direction = np.array([pos2[0]-pos1[0], pos2[1]-pos1[1]])
+            norm = np.sqrt(np.power(direction[0],2) + np.power(direction[1],2))
+            direction = direction/norm
+            # calculate the force vector
+            forceVector = force*direction
+            # apply the force to the agents
+            
+            collision[0].external_force -= forceVector
+            collision[1].external_force += forceVector
+            
 
     def update(self):
+        # set the external forces to zero
+        for agent in self.agents:
+            agent.external_force = np.array([0.0,0.0])
+        listOfCollisions = self.checkCollisions()
+        self.forcesBetweenAgents(listOfCollisions, magnitude=10)
+        #print(listOfCollisions)
         for agent in self.agents:
             agent.step(self.dt)
+        self.time += self.dt
 
-    def getAgentPos(self):
-        return [agent.position for agent in self.agents]
+    def getAgentPositions(self):
+        return np.array([agent.position for agent in self.agents])
 
-    def checkCollisions(self, listOfPixels):
-        listOfCollisions = []
-        for i in range(len(listOfPixels)-1):
-            for j in range(i+1,len(listOfPixels)):
-                pos1 = listOfPixels[i].getPosition()
-                pos2 = listOfPixels[j].getPosition()
-                distance = np.sqrt(np.power(pos2[0]-pos1[0],2) + np.power(pos2[1]-pos1[1],2))
-                if distance < listOfPixels[i].getSize() + listOfPixels[j].getSize():
-                    listOfCollisions.append((i,j))
+
+    def checkCollisions(self, radius=16):
+        # get positions of all agents
+        start = time.time()
+        positions = self.getAgentPositions()
+        radiussquare = 2*radius**2
+        xydiff = positions[:,np.newaxis,:] - positions[np.newaxis,:,:]
+        # calculate the distance between all
+        distances = np.sum(xydiff**2, axis=2)
+        # check if the distance is less than the radius
+        # set the diagonal to be 1000
+        np.fill_diagonal(distances, 1000)
+        collisions = np.where(distances < radiussquare)
+        # get the agents that are colliding
+        agents = []
+        for i in range(len(collisions[0])):
+            agents.append([self.agents[collisions[0][i]], self.agents[collisions[1][i]]])
+        end = time.time()
+        return agents
