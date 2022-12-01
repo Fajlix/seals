@@ -11,6 +11,8 @@ class Pixel:
         pygame.draw.circle(self.screen, self.color, self.pos, self.size)
     def getSize(self):
         return self.size
+    def getPosition(self):
+        return self.pos
 
 class Graphics:
     def __init__(self, width, height, pixelSize=8):
@@ -21,20 +23,17 @@ class Graphics:
 
         self.screen = pygame.display.set_mode((self.width, self.height))
 
-    def drawHuman(self, listOfPos):
+    def drawHuman(self, listOfPos, color="orange"):
         for pos in listOfPos:
-            self.pixels.append(Pixel(self.screen, "orange", pos, self.pixelSize))
+            self.pixels.append(Pixel(self.screen, color, pos, self.pixelSize))
 
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
+        self.screen.fill(0)
+        for p in self.pixels:
+            p.update()
+        pygame.display.update()
 
-            self.screen.fill(0)
-            for p in self.pixels:
-                p.update()
-            pygame.display.update()
+    def getPixels(self):
+        return self.pixels
 
     def simulate(self):
         1
