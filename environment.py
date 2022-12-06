@@ -41,15 +41,19 @@ class Environment:
             # calculate the force vector
             forceVector = force*direction
             # apply the force to the agents
-            
-            collision[0].external_force -= forceVector
-            collision[1].external_force += forceVector
+            collision[0].external_forces.append(-forceVector)
+            collision[1].external_forces.append(forceVector)
+
             
 
     def update(self):
+        # remove agents that are not alive
+        self.agents = [agent for agent in self.agents if agent.alive]
         # set the external forces to zero
+
         for agent in self.agents:
-            agent.external_force = np.array([0.0,0.0])
+            agent.external_forces = []
+            agent.external_forces.append(np.array([0,0]))
         listOfCollisions = self.checkCollisions()
         self.forcesBetweenAgents(listOfCollisions, magnitude=10)
         #print(listOfCollisions)
@@ -71,8 +75,11 @@ class Environment:
         distances = np.sum(xydiff**2, axis=2)
         # check if the distance is less than the radius
         # set the diagonal to be 1000
-        np.fill_diagonal(distances, 1000)
+        np.fill_diagonal(distances, np.inf)
         collisions = np.where(distances < radiussquare)
+        # get only the unique pairs
+        collisions = np.unique(np.sort(collisions, axis=0), axis=1)
+        
         # get the agents that are colliding
         agents = []
         for i in range(len(collisions[0])):
