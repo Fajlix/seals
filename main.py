@@ -11,7 +11,7 @@ import multiprocessing as mp
 def run():
     agents = []
     
-    for i in range(1000):
+    for i in range(500):
         x = random.randint(8/2, 1000 - 8/2)
         y = random.randint(8/2, 1000 - 8/2)
         # make sure that the agents are not in radius of each other
