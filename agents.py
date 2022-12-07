@@ -70,6 +70,15 @@ class Agent:
         self.velocity[1] = np.min([np.max([self.velocity[1], -2]), 2])
         
         self.position += self.velocity*dt
+
+        friction = 0.0001
+        velocity_norm = np.linalg.norm(self.velocity)
+        
+        if velocity_norm > friction:
+            velocity_direction = self.velocity / velocity_norm
+            self.velocity -= velocity_direction * friction
+        elif friction - velocity_norm > 0:
+            self.velocity = self.velocity*0
         self.apply_pressure(dt)
     def attraction_towards_stage(self, point_of_attraction, attractive_force_magnitude):
         # get the angle between the agent and the point of attraction
