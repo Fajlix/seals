@@ -43,7 +43,7 @@ class Agent:
         global max_pressure
         if pressure > max_pressure:
             max_pressure = pressure
-            print(max_pressure)
+            #print(max_pressure)
         if(pressure > self.p_max):
             #TODO DAMAGE SHOULD NOT BE A CONSTANT!
             damage = 10*dt*pressure/self.p_max
@@ -61,7 +61,7 @@ class Agent:
         self.external_forces = np.array(self.external_forces)
         # make sure that the external forces are atleast 2D
         self.external_forces = np.atleast_2d(self.external_forces)
-        self.attraction_towards_stage((500,500), 5)
+        self.attraction_towards_stage((100,100), 5)
         # calculate the acceleration
         self.acceleration = (self.internal_force + np.sum(self.external_forces, axis=0))/self.mass
         self.velocity += self.acceleration*dt

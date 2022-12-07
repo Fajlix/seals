@@ -11,21 +11,21 @@ import multiprocessing as mp
 def run():
     agents = []
     
-    for i in range(500):
-        x = random.randint(8/2, 1000 - 8/2)
-        y = random.randint(8/2, 1000 - 8/2)
+    for i in range(10):
+        x = random.randint(8/2, 200 - 8/2)
+        y = random.randint(8/2, 200 - 8/2)
         # make sure that the agents are not in radius of each other
         while any([np.sqrt(np.power(x - agent.position[0],2) + np.power(y - agent.position[1],2)) < 16 for agent in agents]):
-            x = random.randint(8/2, 1000 - 8/2)
-            y = random.randint(8/2, 1000 - 8/2)
+            x = random.randint(8/2, 200 - 8/2)
+            y = random.randint(8/2, 200 - 8/2)
         
         agents.append(Agent(x,y))
 
     env = Environment(agents)
 
-    graphic = Graphics(1000, 1000)
+    graphic = Graphics(200, 200)
 
-    graphic.drawHuman(env.getAgentPositions())
+    graphic.drawHuman(env.getAgentInfo())
     running = True
     last_update_time = 0
     while running:
@@ -37,7 +37,7 @@ def run():
 
         env.update()
         if env.time - last_update_time > 0.5:
-            graphic.drawHuman(env.getAgentPositions())
+            graphic.drawHuman(env.getAgentInfo())
             last_update_time = env.time
 if __name__ == "__main__":
     run()
