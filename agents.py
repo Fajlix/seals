@@ -33,9 +33,12 @@ class Agent:
         self.behaviour = "stressed"
     def apply_pressure(self,dt):
         # calculate the combined pressure from all agents
-        # get magnitude of all external forces
-        external_force = np.sum(self.external_forces, axis=0)
-        pressure = np.linalg.norm(external_force/self.area)
+        # get magnitude of all external forces acting on the agent
+        external_force_magnitudes = np.linalg.norm(self.external_forces, axis=1)
+        # sum all the external forces
+        total_external_force = np.sum(external_force_magnitudes)
+        # calculate the pressure
+        pressure = total_external_force/self.area
         # if the pressure is higher than the max pressure, set the max pressure to the current pressure
         global max_pressure
         if pressure > max_pressure:
