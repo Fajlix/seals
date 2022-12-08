@@ -65,6 +65,10 @@ class Environment:
         return np.array([agent.position for agent in self.agents])
 
 
+    def getAgentInfo(self):
+        return np.array([[agent.position, agent.health] for agent in self.agents])
+
+
     def checkCollisions(self, radius=16):
         # get positions of all agents
         start = time.time()
