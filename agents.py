@@ -57,7 +57,7 @@ class Agent:
             #TODO HEALING SHOULD NOT BE A CONSTANT!
             healing = 0.1*dt
             healing = np.min([self.health + healing,self.max_health])
-    def step(self,dt,stage):
+    def step(self,dt,stage,split):
         self.external_forces = np.array(self.external_forces)
         # make sure that the external forces are atleast 2D
         self.external_forces = np.atleast_2d(self.external_forces)
@@ -72,17 +72,24 @@ class Agent:
         self.velocity[0] = np.min([np.max([self.velocity[0], -2]), 2])
         self.velocity[1] = np.min([np.max([self.velocity[1], -2]), 2])
         
-       
-        if stage:
-            new_position = self.position+ self.velocity*dt
+        new_position = self.position+ self.velocity*dt
+        if stage and split:  
             if new_position[1]<=30:
                 self.position[1]= self.position[1]
-            elif new_position[0] <=30:
-                self.position[0] = self.position[0]
-            elif new_position[0] >=960:
+            elif 515>new_position[0]>485:
                 self.position[0] = self.position[0]
             else:
                 self.position += self.velocity*dt
+        elif stage:
+            if new_position[1]<=30:
+                self.position[1]= self.position[1]
+            elif new_position[0] <=30:
+                    self.position[0] = self.position[0]
+            elif new_position[0] >=960:
+                    self.position[0] = self.position[0]
+            else:
+                self.position += self.velocity*dt
+            
         else:
             self.position += self.velocity*dt
 

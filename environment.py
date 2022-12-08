@@ -4,7 +4,7 @@ import numpy as np
 from itertools import combinations
 import time
 class Environment:
-    def __init__(self, agents:list,stage, dt=0.01, sime_time=1000, xMin=0, xMax=1000, yMin=0, yMax=1000):
+    def __init__(self, agents:list,stage,split, dt=0.01, sime_time=1000, xMin=0, xMax=1000, yMin=0, yMax=1000):
         self.xMin = xMin
         self.xMax = xMax
         self.yMin = yMin
@@ -13,6 +13,7 @@ class Environment:
             raise TypeError("agents should be of type Agent")
         self.agents = agents
         self.stage=stage
+        self.split=split
         self.dt = dt
         self.time = 0
         self.sime_time = sime_time
@@ -59,7 +60,7 @@ class Environment:
         self.forcesBetweenAgents(listOfCollisions, magnitude=10)
         #print(listOfCollisions)
         for agent in self.agents:
-            agent.step(self.dt,self.stage)
+            agent.step(self.dt,self.stage,self.split)
         self.time += self.dt
 
     def getAgentPositions(self):
