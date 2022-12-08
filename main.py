@@ -8,10 +8,13 @@ from crowdPhysics import *
 from environment import *
 import random
 import multiprocessing as mp
+stage=True
+
 def run():
+    
     agents = []
     
-    for i in range(500):
+    for i in range(100):
         x = random.randint(8/2, 1000 - 8/2)
         y = random.randint(8/2, 1000 - 8/2)
         # make sure that the agents are not in radius of each other
@@ -39,5 +42,41 @@ def run():
         if env.time - last_update_time > 0.5:
             graphic.drawHuman(env.getAgentPositions())
             last_update_time = env.time
+
+def run_stage(stage):
+    
+    agents = []
+    
+    for i in range(1000):
+        x = random.randint(50, 1000 - 50)
+        y = random.randint(50, 1000 - 50)
+        # make sure that the agents are not in radius of each other
+        while any([np.sqrt(np.power(x - agent.position[0],2) + np.power(y - agent.position[1],2)) < 16 for agent in agents]):
+            x = random.randint(50, 1000 - 50)
+            y = random.randint(50, 1000 - 50)
+        
+        agents.append(Agent(x,y))
+
+    env = Environment(agents,stage)
+
+    graphic = Graphics(1000, 1000)
+
+    graphic.drawHuman_stage(env.getAgentPositions())
+    running = True
+    last_update_time = 0
+    while running:
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+
+        env.update()
+        if env.time - last_update_time > 0.5:
+            graphic.drawHuman_stage(env.getAgentPositions())
+            last_update_time = env.time
 if __name__ == "__main__":
-    run()
+    if stage:
+        run_stage(stage)
+    else:
+        run()

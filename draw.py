@@ -33,6 +33,20 @@ class Graphics:
         for p in self.pixels:
             p.update()
         pygame.display.update()
+    
+    def drawHuman_stage(self, listOfPos, color="orange"):
+        self.pixels = []
+        for pos in listOfPos:
+            self.pixels.append(Pixel(self.screen, color, pos, self.pixelSize))
+        # green dot in the middle
+        self.pixels.append(Pixel(self.screen, "green", (500, 10), self.pixelSize/4))
+        self.screen.fill(0)
+        #draw stage
+        pygame.draw.rect(self.screen, color, pygame.Rect(20, 10, 960, 920),  2)
+        
+        for p in self.pixels:
+            p.update()
+        pygame.display.flip()
 
     def getPixels(self):
         return self.pixels

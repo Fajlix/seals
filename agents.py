@@ -57,11 +57,14 @@ class Agent:
             #TODO HEALING SHOULD NOT BE A CONSTANT!
             healing = 0.1*dt
             healing = np.min([self.health + healing,self.max_health])
-    def step(self,dt):
+    def step(self,dt,stage):
         self.external_forces = np.array(self.external_forces)
         # make sure that the external forces are atleast 2D
         self.external_forces = np.atleast_2d(self.external_forces)
-        self.attraction_towards_stage((500,500), 5)
+        if stage:
+            self.attraction_towards_stage((500,10), 5)
+        else:
+            self.attraction_towards_stage((500,500), 5)
         # calculate the acceleration
         self.acceleration = (self.internal_force + np.sum(self.external_forces, axis=0))/self.mass
         self.velocity += self.acceleration*dt
@@ -69,7 +72,20 @@ class Agent:
         self.velocity[0] = np.min([np.max([self.velocity[0], -2]), 2])
         self.velocity[1] = np.min([np.max([self.velocity[1], -2]), 2])
         
-        self.position += self.velocity*dt
+       
+        if stage:
+            new_position = self.position+ self.velocity*dt
+            if new_position[1]<=30:
+                self.position[1]= self.position[1]
+            elif new_position[0] <=30:
+                self.position[0] = self.position[0]
+            elif new_position[0] >=960:
+                self.position[0] = self.position[0]
+            else:
+                self.position += self.velocity*dt
+        else:
+            self.position += self.velocity*dt
+
         self.apply_pressure(dt)
     def attraction_towards_stage(self, point_of_attraction, attractive_force_magnitude):
         # get the angle between the agent and the point of attraction
