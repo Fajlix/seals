@@ -11,7 +11,7 @@ class Agent:
         self.mass = mass
         self.velocity = np.array([0.0, 0.0])
         self.acceleration = np.array([0.0, 0.0])
-        self.external_force = np.array([0.0, 0.0])
+        self.external_forces = []
         # Towards ex stage, exit, etc
         self.attractive_force_magnitude = 0
         self.attraction_angle = 0
@@ -31,26 +31,84 @@ class Agent:
         self.size = size
         # I was thinking that depending on the type of person their reactions to events might differ, 
         self.behaviour = "stressed"
-
-    def apply_pressure(self, dt):
-        if(np.linalg.norm(self.external_force/self.area) > self.p_max):
-            # TODO DAMAGE SHOULD NOT BE A CONSTANT!
-            damage = 1
+    def apply_pressure(self,dt):
+        # calculate the combined pressure from all agents
+        # get magnitude of all external forces acting on the agent
+        external_force_magnitudes = np.linalg.norm(self.external_forces, axis=1)
+        # sum all the external forces
+        total_external_force = np.sum(external_force_magnitudes)
+        # calculate the pressure
+        pressure = total_external_force/self.area
+        # if the pressure is higher than the max pressure, set the max pressure to the current pressure
+        global max_pressure
+        if pressure > max_pressure:
+            max_pressure = pressure
+            #print(max_pressure)
+        if(pressure > self.p_max):
+            #TODO DAMAGE SHOULD NOT BE A CONSTANT!
+            damage = 10*dt*pressure/self.p_max
             self.health -= damage
+            if self.health <= 80:
+                print("health is", self.health)
+            if(self.health <= 0):
+                print("Agent died")
+                self.alive = False
         elif(self.health < self.max_health):
-            # TODO HEALING SHOULD NOT BE A CONSTANT!
-            healing = 0.1
+            #TODO HEALING SHOULD NOT BE A CONSTANT!
+            healing = 0.1*dt
             healing = np.min([self.health + healing,self.max_health])
+    def step(self,dt,stage,split):
+        self.external_forces = np.array(self.external_forces)
+        # make sure that the external forces are atleast 2D
+        self.external_forces = np.atleast_2d(self.external_forces)
 
-    def step(self, dt):
-        self.attraction_towards_stage((500, 500), 5)
-        self.acceleration = (self.external_force + self.internal_force)/self.mass
+        if stage:
+            self.attraction_towards_stage((500,10), 5)
+        else:
+            self.attraction_towards_stage((500,500), 5)
+
+
+        # calculate the acceleration
+        self.acceleration = (self.internal_force + np.sum(self.external_forces, axis=0))/self.mass
         self.velocity += self.acceleration*dt
         # set max velocity in x and y direction
         self.velocity[0] = np.min([np.max([self.velocity[0], -2]), 2])
         self.velocity[1] = np.min([np.max([self.velocity[1], -2]), 2])
         
-        self.position += self.velocity*dt
+
+        new_position = self.position+ self.velocity*dt
+        if stage and split:  
+            if new_position[1]<=30:
+                self.position[1]= self.position[1]
+            elif 515>new_position[0]>485:
+                self.position[0] = self.position[0]
+            else:
+                self.position += self.velocity*dt
+        elif stage:
+            if new_position[1]<=30:
+                self.position[1]= self.position[1]
+            elif new_position[0] <=30:
+                    self.position[0] = self.position[0]
+            elif new_position[0] >=960:
+                    self.position[0] = self.position[0]
+            else:
+                self.position += self.velocity*dt
+            
+        else:
+            self.position += self.velocity*dt
+
+
+
+
+        friction = 0.0001
+        velocity_norm = np.linalg.norm(self.velocity)
+        
+        if velocity_norm > friction:
+            velocity_direction = self.velocity / velocity_norm
+            self.velocity -= velocity_direction * friction
+        elif friction - velocity_norm > 0:
+            self.velocity = self.velocity*0
+
         self.apply_pressure(dt)
 
     def attraction_towards_stage(self, point_of_attraction, attractive_force_magnitude):

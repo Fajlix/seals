@@ -19,7 +19,7 @@ no_of_agents = 300
 height_of_window, width_of_window = 1000, 1000
 
 
-def run():
+def run(stage=True,split= True):
     agents = []
 
     if agent_individual_mass:
@@ -34,21 +34,55 @@ def run():
     else:
         size = np.full(no_of_agents, 2)
     
-    for i in range(no_of_agents):
-        x = random.randint(8/2, width_of_window - 8/2)
-        y = random.randint(8/2, height_of_window - 8/2)
-        # make sure that the agents are not in radius of each other
-        while any([np.sqrt(np.power(x - agent.position[0], 2) + np.power(y - agent.position[1], 2)) < 16 for agent in agents]):
+
+    
+    if stage and not split:
+        for i in range(no_of_agents):
+            x = random.randint(50, width_of_window - 50)
+            y = random.randint(50, height_of_window - 50)
+            while any([np.sqrt(np.power(x - agent.position[0],2) + np.power(y - agent.position[1],2)) < 16 for agent in agents]):
+                x = random.randint(50, width_of_window - 50)
+                y = random.randint(50, height_of_window - 50)
+            agents.append(Agent(x, y, mass[i], size[i]))
+    elif stage and split:
+        for i in range(int(no_of_agents/2)):
+            x = random.randint(50, width_of_window - 550)
+            y = random.randint(50, height_of_window - 50)
+            while any([np.sqrt(np.power(x - agent.position[0],2) + np.power(y - agent.position[1],2)) < 16 for agent in agents]):
+                x = random.randint(50, width_of_window - 550)
+                y = random.randint(50, height_of_window - 50)
+            agents.append(Agent(x, y, mass[i], size[i]))
+        for i in range(int(no_of_agents/2)):
+            x = random.randint(550, width_of_window - 50)
+            y = random.randint(50, height_of_window - 50)
+            while any([np.sqrt(np.power(x - agent.position[0],2) + np.power(y - agent.position[1],2)) < 16 for agent in agents]):
+                x = random.randint(550, width_of_window - 50)
+                y = random.randint(50, height_of_window - 50)
+            agents.append(Agent(x, y, mass[i], size[i]))
+    else:
+        for i in range(no_of_agents):
             x = random.randint(8/2, width_of_window - 8/2)
             y = random.randint(8/2, height_of_window - 8/2)
-        
-        agents.append(Agent(x, y, mass[i], size[i]))
+            while any([np.sqrt(np.power(x - agent.position[0],2) + np.power(y - agent.position[1],2)) < 16 for agent in agents]):
+                x = random.randint(8/2, width_of_window - 8/2)
+                y = random.randint(8/2, height_of_window - 8/2)
+            agents.append(Agent(x, y, mass[i], size[i]))
+    
 
-    env = Environment(agents)
 
-    graphic = Graphics(width_of_window, height_of_window)
+    env = Environment(agents,stage,split)
+    #why is this different? 
+    graphics_width_of_window, graphics_height_of_window = 200, 200
+    graphic = Graphics(graphics_width_of_window, graphics_height_of_window)
 
-    graphic.drawHuman(env.getAgentPositions())
+
+    if stage and not split:    
+        graphic.drawHuman_stage(env.getAgentPositions())
+    elif stage and split:
+        graphic.drawHuman_stage_split(env.getAgentPositions())
+    else:
+        graphic.drawHuman(env.getAgentInfo())
+
     running = True
     last_update_time = 0
     while running:
@@ -59,9 +93,17 @@ def run():
 
         env.update()
         if env.time - last_update_time > 0.5:
-            graphic.drawHuman(env.getAgentPositions())
-            last_update_time = env.time
 
+            if stage and not split:    
+                graphic.drawHuman_stage(env.getAgentPositions())
+            elif stage and split:
+                graphic.drawHuman_stage_split(env.getAgentPositions())
+            else:
+                graphic.drawHuman(env.getAgentInfo())
+
+
+            last_update_time = env.time
 
 if __name__ == "__main__":
     run()
+   
