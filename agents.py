@@ -49,10 +49,8 @@ class Agent:
             #TODO DAMAGE SHOULD NOT BE A CONSTANT!
             damage = 10*dt*pressure/self.p_max
             self.health -= damage
-            if self.health <= 80:
-                print("health is", self.health)
             if(self.health <= 0):
-                print("Agent died")
+                #print("Agent died")
                 self.alive = False
         elif(self.health < self.max_health):
             #TODO HEALING SHOULD NOT BE A CONSTANT!
@@ -118,10 +116,3 @@ class Agent:
         self.attractive_force_magnitude = attractive_force_magnitude
         # calculate the attractive force
         self.internal_force = np.array([self.attractive_force_magnitude*np.cos(self.attraction_angle), self.attractive_force_magnitude*np.sin(self.attraction_angle)])
-
-
-
-
-
-
-

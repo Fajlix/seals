@@ -19,7 +19,9 @@ variable_attraction=True
 
 
 # Variables
+
 no_of_agents = 100
+
 height_of_window, width_of_window = 1000, 1000
 
 
