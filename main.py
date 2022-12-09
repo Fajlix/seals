@@ -14,6 +14,7 @@ def run(stage,split):
     
     agents = []
     
+
     
     if stage and not split:
         for i in range(100):
@@ -48,16 +49,19 @@ def run(stage,split):
             agents.append(Agent(x,y))
     
 
+
     env = Environment(agents,stage,split)
 
-    graphic = Graphics(1000, 1000)
+    graphic = Graphics(200, 200)
+
 
     if stage and not split:    
         graphic.drawHuman_stage(env.getAgentPositions())
     elif stage and split:
         graphic.drawHuman_stage_split(env.getAgentPositions())
     else:
-        graphic.drawHuman(env.getAgentPositions())
+        graphic.drawHuman(env.getAgentInfo())
+
     running = True
     last_update_time = 0
     while running:
@@ -69,12 +73,16 @@ def run(stage,split):
 
         env.update()
         if env.time - last_update_time > 0.5:
+
             if stage and not split:    
                 graphic.drawHuman_stage(env.getAgentPositions())
             elif stage and split:
                 graphic.drawHuman_stage_split(env.getAgentPositions())
             else:
-                graphic.drawHuman(env.getAgentPositions())
+                graphic.drawHuman(env.getAgentInfo())
+
+
+            last_update_time = env.time
 
 if __name__ == "__main__":
     run(stage=True,split=True)
