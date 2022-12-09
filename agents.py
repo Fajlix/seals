@@ -1,5 +1,4 @@
 import numpy as np
-from numpy import random
 '''
 Defines different agents e.g, human, maybe in the future more agent e.g police / attacker etc.
 '''
@@ -7,12 +6,9 @@ Defines different agents e.g, human, maybe in the future more agent e.g police /
 
 class Agent:
     ''' Defines a agent'''
-    def __init__(self, x, y, individual_mass, individual_size, mass=70, p_max=1, area=1, health=100):
+    def __init__(self, x, y, mass=70, size=2, p_max=1, area=1, health=100):
         self.position = np.array([float(x), float(y)])
-        if individual_mass:
-            self.mass = random.normal(loc=70, scale=10)  # Mean = 70kg, Std = 10kg, feel free to change
-        else:
-            self.mass = mass
+        self.mass = mass
         self.velocity = np.array([0.0, 0.0])
         self.acceleration = np.array([0.0, 0.0])
         self.external_force = np.array([0.0, 0.0])
@@ -32,13 +28,7 @@ class Agent:
         # Just some starting ideas, size could be used randomly 
         # so that every agent is not the same size, like Viktor is two times the
         # size of me (Felix) and will probably survive longer
-        if individual_size and individual_mass:
-            r = random.normal(loc=0.006, scale=0.001)  # Chosen s.t. 70*0.006=0.42, std arbitrary
-            self.size = r * self.mass
-        elif individual_size:
-            self.size = random.normal(loc=0.42, scale=0.05)  # Mean = 42cm, Std = 5cm, feel free to change
-        else:
-            self.size = 2  # We have giants among us
+        self.size = size
         # I was thinking that depending on the type of person their reactions to events might differ, 
         self.behaviour = "stressed"
 
