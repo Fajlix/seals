@@ -23,6 +23,28 @@ class Graphics:
 
         self.screen = pygame.display.set_mode((self.width, self.height))
 
+    def drawSimulation(self, positions, health_points, stage, split):
+        self.pixels = []
+        for pos, hp in zip(positions, health_points):
+            scaled_hp = int(hp*2.55)
+            color = pygame.Color(255 - scaled_hp,scaled_hp,0,0)
+            self.pixels.append(Pixel(self.screen, color, pos, self.pixelSize))
+        self.screen.fill(0)
+        if stage and split:
+            self.pixels.append(Pixel(self.screen, "green", (500, 10), self.pixelSize/4))
+            pygame.draw.rect(self.screen, color, pygame.Rect(20, 10, 480, 920),  2)
+            pygame.draw.rect(self.screen, color, pygame.Rect(500, 10, 480, 920),  2)
+        elif stage:
+            self.pixels.append(Pixel(self.screen, "green", (500, 10), self.pixelSize/4))
+            pygame.draw.rect(self.screen, color, pygame.Rect(20, 10, 960, 920),  2)
+        else:
+            self.pixels.append(Pixel(self.screen, "green", (500, 500), self.pixelSize/4))
+        for p in self.pixels:
+            p.update()
+        pygame.display.flip()
+
+
+
     def drawHuman(self, listOfInfo, color="orange"):
         self.pixels = []
         for info in listOfInfo:
@@ -60,7 +82,7 @@ class Graphics:
         self.screen.fill(0)
         #draw stage
         pygame.draw.rect(self.screen, color, pygame.Rect(20, 10, 480, 920),  2)
-        pygame.draw.rect(self.screen, color, pygame.Rect(500, 10, 480, 920),  2)
+        pygame.draw.rect(self.screen, color, pygame.Rect(500, 10, 480, 920),  2) 
         
         for p in self.pixels:
             p.update()

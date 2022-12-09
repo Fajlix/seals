@@ -52,15 +52,17 @@ def run(stage,split):
 
     env = Environment(agents,stage,split)
 
-    graphic = Graphics(200, 200)
+    graphic = Graphics(1000, 1000)
 
 
-    if stage and not split:    
-        graphic.drawHuman_stage(env.getAgentPositions())
-    elif stage and split:
-        graphic.drawHuman_stage_split(env.getAgentPositions())
-    else:
-        graphic.drawHuman(env.getAgentInfo())
+    # if stage and not split:    
+    #     graphic.drawHuman_stage(env.getAgentPositions())
+    # elif stage and split:
+    #     graphic.drawHuman_stage_split(env.getAgentPositions())
+    # else:
+    #     graphic.drawHuman(env.getAgentInfo())
+
+    graphic.drawSimulation(env.getAgentPositions(), env.getAgentHealth(), stage, split)
 
     running = True
     last_update_time = 0
@@ -74,16 +76,17 @@ def run(stage,split):
         env.update()
         if env.time - last_update_time > 0.5:
 
-            if stage and not split:    
-                graphic.drawHuman_stage(env.getAgentPositions())
-            elif stage and split:
-                graphic.drawHuman_stage_split(env.getAgentPositions())
-            else:
-                graphic.drawHuman(env.getAgentInfo())
+            # if stage and not split:    
+            #     graphic.drawHuman_stage(env.getAgentPositions())
+            # elif stage and split:
+            #     graphic.drawHuman_stage_split(env.getAgentPositions())
+            # else:
+            #     graphic.drawHuman(env.getAgentInfo())
 
+            graphic.drawSimulation(env.getAgentPositions(), env.getAgentHealth(), stage, split)
 
             last_update_time = env.time
 
 if __name__ == "__main__":
-    run(stage=True,split=True)
+    run(stage=True,split=False)
    
