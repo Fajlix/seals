@@ -57,11 +57,17 @@ class Agent:
             #TODO HEALING SHOULD NOT BE A CONSTANT!
             healing = 0.1*dt
             healing = np.min([self.health + healing,self.max_health])
-    def step(self,dt):
+    def step(self,dt,stage,split):
         self.external_forces = np.array(self.external_forces)
         # make sure that the external forces are atleast 2D
         self.external_forces = np.atleast_2d(self.external_forces)
-        self.attraction_towards_stage((100,100), 5)
+
+        if stage:
+            self.attraction_towards_stage((500,10), 5)
+        else:
+            self.attraction_towards_stage((500,500), 5)
+
+
         # calculate the acceleration
         self.acceleration = (self.internal_force + np.sum(self.external_forces, axis=0))/self.mass
         self.velocity += self.acceleration*dt
@@ -69,7 +75,30 @@ class Agent:
         self.velocity[0] = np.min([np.max([self.velocity[0], -2]), 2])
         self.velocity[1] = np.min([np.max([self.velocity[1], -2]), 2])
         
-        self.position += self.velocity*dt
+
+        new_position = self.position+ self.velocity*dt
+        if stage and split:  
+            if new_position[1]<=30:
+                self.position[1]= self.position[1]
+            elif 515>new_position[0]>485:
+                self.position[0] = self.position[0]
+            else:
+                self.position += self.velocity*dt
+        elif stage:
+            if new_position[1]<=30:
+                self.position[1]= self.position[1]
+            elif new_position[0] <=30:
+                    self.position[0] = self.position[0]
+            elif new_position[0] >=960:
+                    self.position[0] = self.position[0]
+            else:
+                self.position += self.velocity*dt
+            
+        else:
+            self.position += self.velocity*dt
+
+
+
 
         friction = 0.0001
         velocity_norm = np.linalg.norm(self.velocity)
@@ -79,6 +108,7 @@ class Agent:
             self.velocity -= velocity_direction * friction
         elif friction - velocity_norm > 0:
             self.velocity = self.velocity*0
+
         self.apply_pressure(dt)
     def attraction_towards_stage(self, point_of_attraction, attractive_force_magnitude):
         # get the angle between the agent and the point of attraction
