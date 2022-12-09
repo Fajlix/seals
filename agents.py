@@ -3,7 +3,7 @@ import numpy as np
 Defines different agents e.g, human, maybe in the future more agent e.g police / attacker etc.
 '''
 
-
+#max_pressure = 0
 class Agent:
     ''' Defines a agent'''
     def __init__(self, x, y, mass=70, size=2, p_max=1, area=1, health=100):
@@ -41,8 +41,8 @@ class Agent:
         pressure = total_external_force/self.area
         # if the pressure is higher than the max pressure, set the max pressure to the current pressure
         global max_pressure
-        if pressure > max_pressure:
-            max_pressure = pressure
+        #if pressure > max_pressure:
+        #    max_pressure = pressure
             #print(max_pressure)
         if(pressure > self.p_max):
             #TODO DAMAGE SHOULD NOT BE A CONSTANT!

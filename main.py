@@ -71,9 +71,7 @@ def run(stage=True,split= True):
 
 
     env = Environment(agents,stage,split)
-    #why is this different? 
-    graphics_width_of_window, graphics_height_of_window = 200, 200
-    graphic = Graphics(graphics_width_of_window, graphics_height_of_window)
+    graphic = Graphics(width_of_window, height_of_window)
 
 
     if stage and not split:    
