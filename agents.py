@@ -54,10 +54,3 @@ class Agent:
         self.attractive_force_magnitude = attractive_force_magnitude
         # calculate the attractive force
         self.internal_force = np.array([self.attractive_force_magnitude*np.cos(self.attraction_angle), self.attractive_force_magnitude*np.sin(self.attraction_angle)])
-
-
-
-
-
-
-

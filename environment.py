@@ -1,4 +1,3 @@
-import pygame
 from agents import Agent
 import numpy as np
 from itertools import combinations
@@ -26,6 +25,7 @@ class Environment:
         # the force between the agents should exponential to the distance 
         # list of collisions is a list of agents that are colliding
         # between them
+        start = time.time()
         for collision in listOfCollisions:
             # calculate the distance between the agents
             pos1 = collision[0].position
@@ -44,7 +44,10 @@ class Environment:
             
             collision[0].external_force -= forceVector
             collision[1].external_force += forceVector
-            
+        end = time.time()
+        number_of_collisions = len(listOfCollisions)
+        print("time taken to calculate forces: ", end-start)
+        print("number of collisions: ", number_of_collisions)
 
     def update(self):
         # set the external forces to zero
@@ -63,12 +66,16 @@ class Environment:
 
     def checkCollisions(self, radius=16):
         # get positions of all agents
-        start = time.time()
+        
         positions = self.getAgentPositions()
+        # get positions squared
         radiussquare = 2*radius**2
-        xydiff = positions[:,np.newaxis,:] - positions[np.newaxis,:,:]
+        start = time.time()
+        # get the distance between all agents
+        distances = np.sum(positions**2, axis=1)[:, None] + np.sum(positions**2, axis=1) - 2*np.dot(positions, positions.T)
+        end = time.time()
+        #print("time taken to check collisions: ", end-start)
         # calculate the distance between all
-        distances = np.sum(xydiff**2, axis=2)
         # check if the distance is less than the radius
         # set the diagonal to be 1000
         np.fill_diagonal(distances, 1000)
@@ -77,5 +84,5 @@ class Environment:
         agents = []
         for i in range(len(collisions[0])):
             agents.append([self.agents[collisions[0][i]], self.agents[collisions[1][i]]])
-        end = time.time()
+        
         return agents
