@@ -15,7 +15,7 @@ agent_individual_mass = False
 agent_individual_size = False
 
 # Variables
-no_of_agents = 300
+no_of_agents = 1000
 height_of_window, width_of_window = 1000, 1000
 
 
