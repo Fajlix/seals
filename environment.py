@@ -65,6 +65,9 @@ class Environment:
 
     def getAgentPositions(self):
         return np.array([agent.position for agent in self.agents])
+    
+    def getAgentHealth(self):
+        return np.array([agent.health for agent in self.agents])
 
 
     def getAgentInfo(self):
