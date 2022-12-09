@@ -6,14 +6,15 @@ Defines different agents e.g, human, maybe in the future more agent e.g police /
 #max_pressure = 0
 class Agent:
     ''' Defines a agent'''
-    def __init__(self, x, y, mass=70, size=2, p_max=1, area=1, health=100):
-        self.position = np.array([float(x), float(y)])
+
+    def __init__(self, x, y, attractive_force_magnitude, mass=70, size=2, p_max=1, area=1, health=100):
+        self.position = np.array([float(x),float(y)])
         self.mass = mass
         self.velocity = np.array([0.0, 0.0])
         self.acceleration = np.array([0.0, 0.0])
         self.external_forces = []
         # Towards ex stage, exit, etc
-        self.attractive_force_magnitude = 0
+        self.attractive_force_magnitude = attractive_force_magnitude
         self.attraction_angle = 0
         # For example friction, other
         self.internal_force = np.array([0.0, 0.0])
@@ -61,9 +62,9 @@ class Agent:
         self.external_forces = np.atleast_2d(self.external_forces)
 
         if stage:
-            self.attraction_towards_stage((500,10), 5)
+            self.attraction_towards_stage((500,10), self.attractive_force_magnitude)
         else:
-            self.attraction_towards_stage((500,500), 5)
+            self.attraction_towards_stage((500,500), self.attractive_force_magnitude)
 
 
         # calculate the acceleration
