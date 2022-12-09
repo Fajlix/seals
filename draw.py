@@ -26,7 +26,7 @@ class Graphics:
     def drawSimulation(self, positions, health_points, stage, split):
         self.pixels = []
         for pos, hp in zip(positions, health_points):
-            scaled_hp = int(hp*2.55)
+            scaled_hp = max(0,int(hp*2.55))
             color = pygame.Color(255 - scaled_hp,scaled_hp,0,0)
             self.pixels.append(Pixel(self.screen, color, pos, self.pixelSize))
         self.screen.fill(0)
