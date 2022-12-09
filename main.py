@@ -14,12 +14,12 @@ from numpy import random
 agent_individual_mass = False
 agent_individual_size = False
 stage = True
-split= False 
+split= True 
 variable_attraction=True
 
 
 # Variables
-no_of_agents = 300
+no_of_agents = 100
 height_of_window, width_of_window = 1000, 1000
 
 

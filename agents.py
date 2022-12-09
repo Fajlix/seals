@@ -8,7 +8,7 @@ class Agent:
     ''' Defines a agent'''
 
     def __init__(self, x, y, attractive_force_magnitude, mass=70, size=2, p_max=1, area=1, health=100):
-
+        self.position = np.array([float(x),float(y)])
         self.mass = mass
         self.velocity = np.array([0.0, 0.0])
         self.acceleration = np.array([0.0, 0.0])
