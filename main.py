@@ -18,14 +18,14 @@ import numpy as np
 agent_individual_mass = False
 agent_individual_size = False
 stage = True
-split= False
+split = False
 variable_attraction=True
 
 
 # Variables
 dead_list=[]
 time_list=[]
-no_of_agents = 1000
+no_of_agents = 500
 
 height_of_window, width_of_window = 1000, 1000
 
@@ -51,12 +51,12 @@ def run():
         for i in range(no_of_agents):
             x = random.randint(50, width_of_window - 50)
             y = random.randint(50, height_of_window - 50)
-            while any([np.sqrt(np.power(x - agent.position[0],2) + np.power(y - agent.position[1],2)) < 16 for agent in agents]):
+            while any([np.sqrt(np.power(x - agent.position[0],2) + np.power(y - agent.position[1],2)) < 18 for agent in agents]):
 
                 x = random.randint(50, width_of_window - 50)
                 y = random.randint(50, height_of_window - 50)
             if variable_attraction:
-                attraction = np.random.randint(1, high=7, size=None, dtype=int)
+                attraction = np.random.randint(4, high=15, size=None, dtype=int)
                 agents.append(Agent(x, y, attraction,mass[i], size[i]))
             else:
                 agents.append(Agent(x, y, 5,mass[i], size[i]))
@@ -64,7 +64,7 @@ def run():
         for i in range(int(no_of_agents/2)):
             x = random.randint(50, width_of_window - 550)
             y = random.randint(50, height_of_window - 50)
-            while any([np.sqrt(np.power(x - agent.position[0],2) + np.power(y - agent.position[1],2)) < 16 for agent in agents]):
+            while any([np.sqrt(np.power(x - agent.position[0],2) + np.power(y - agent.position[1],2)) < 18 for agent in agents]):
 
                 x = random.randint(50, width_of_window - 550)
                 y = random.randint(50, height_of_window - 50)
@@ -99,25 +99,22 @@ def run():
                 agents.append(Agent(x, y, 5,mass[i], size[i]))
     env = Environment(agents,stage,split)
     graphic = Graphics(width_of_window, height_of_window)
-    graphic.drawSimulation(env.getAgentPositions(), env.getAgentHealth(), stage, split)
-
-
-
+    graphic.drawSimulation(env.getAgentPositions(), env.getAgentHealth(), stage, split, env.time)
 
     running = True
     last_update_time = 0
-    while running and time_st<10:
+    while running and time_st<1000:
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
         no_of_dead_agents = no_of_dead_agents + env.update()
-        if env.time - last_update_time > 0.5:
+        if env.time - last_update_time >= 0.5:
             time_st = time_st + 1
             time_list.append(time_st)
             dead_list.append(no_of_dead_agents)
-            graphic.drawSimulation(env.getAgentPositions(), env.getAgentHealth(), stage, split)
+            graphic.drawSimulation(env.getAgentPositions(), env.getAgentHealth(), stage, split, env.time)
 
             last_update_time = env.time
             
@@ -131,11 +128,6 @@ def run():
     plt.ylim(bottom=0)
     plt.show()
    
-
-      
-
-
-
 if __name__ == "__main__":
     run()
 

@@ -23,7 +23,7 @@ class Environment:
         return magnitude/(distance**2)
 
 
-    def forcesBetweenAgents(self, listOfCollisions,agent_radius=8, magnitude=10): 
+    def forcesBetweenAgents(self, listOfCollisions,agent_radius=8, magnitude=15): 
         # the force between the agents should exponential to the distance 
         # list of collisions is a list of agents that are colliding
         # between them

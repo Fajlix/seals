@@ -22,8 +22,10 @@ class Graphics:
         self.pixels = []
 
         self.screen = pygame.display.set_mode((self.width, self.height))
+        
+        pygame.init()
 
-    def drawSimulation(self, positions, health_points, stage, split):
+    def drawSimulation(self, positions, health_points, stage, split, time):
         self.pixels = []
         for pos, hp in zip(positions, health_points):
             scaled_hp = max(0,int(hp*2.55))
@@ -32,13 +34,22 @@ class Graphics:
         self.screen.fill(0)
         if stage and split:
             self.pixels.append(Pixel(self.screen, "green", (500, 10), self.pixelSize/4))
-            pygame.draw.rect(self.screen, color, pygame.Rect(20, 10, 480, 920),  2)
-            pygame.draw.rect(self.screen, color, pygame.Rect(500, 10, 480, 920),  2)
+            pygame.draw.rect(self.screen, color, pygame.Rect(20, 10, 480, 960),  2)
+            pygame.draw.rect(self.screen, color, pygame.Rect(500, 10, 480, 960),  2)
         elif stage:
             self.pixels.append(Pixel(self.screen, "green", (500, 10), self.pixelSize/4))
-            pygame.draw.rect(self.screen, color, pygame.Rect(20, 10, 960, 920),  2)
+            pygame.draw.rect(self.screen, color, pygame.Rect(20, 10, 960, 960),  2)
         else:
             self.pixels.append(Pixel(self.screen, "green", (500, 500), self.pixelSize/4))
+        # display time: time in the bottom right corner
+        
+        font = pygame.font.Font('freesansbold.ttf', 24)
+        # round time to 2 decimal places
+
+        text = font.render(f'Time: {str(round(time,1))}', True, (255, 255, 255), (0, 0, 0))
+        textRect = text.get_rect()
+        textRect.center = (self.width - 100, self.height - 20)
+        self.screen.blit(text, textRect)
         for p in self.pixels:
             p.update()
         pygame.display.flip()
@@ -81,8 +92,8 @@ class Graphics:
         self.pixels.append(Pixel(self.screen, "green", (500, 10), self.pixelSize/4))
         self.screen.fill(0)
         #draw stage
-        pygame.draw.rect(self.screen, color, pygame.Rect(20, 10, 480, 920),  2)
-        pygame.draw.rect(self.screen, color, pygame.Rect(500, 10, 480, 920),  2) 
+        pygame.draw.rect(self.screen, color, pygame.Rect(20, 10, 480, 960),  2)
+        pygame.draw.rect(self.screen, color, pygame.Rect(500, 10, 480, 960),  2) 
         
         for p in self.pixels:
             p.update()

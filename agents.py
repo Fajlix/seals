@@ -47,7 +47,7 @@ class Agent:
             #print(max_pressure)
         if(pressure > self.p_max):
             #TODO DAMAGE SHOULD NOT BE A CONSTANT!
-            damage = 1*dt*pressure*0.005/self.p_max
+            damage = 1*dt*pressure*0.01/self.p_max
             
             self.health -= damage
             if(self.health <= 0):
@@ -55,7 +55,7 @@ class Agent:
                 self.alive = False
         if(self.health < self.max_health):
             #TODO HEALING SHOULD NOT BE A CONSTANT!
-            healing = 2*dt
+            healing = 1.5*dt
             healing = np.min([self.health + healing,self.max_health])
             self.health = healing
     def step(self,dt,stage,split):
@@ -78,26 +78,20 @@ class Agent:
         
 
         new_position = self.position+ self.velocity*dt
+        
         if stage and split:  
             if new_position[1]<=30:
-                self.position[1]= self.position[1]
+                new_position[1]= self.position[1]
             elif 515>new_position[0]>485:
-                self.position[0] = self.position[0]
-            else:
-                self.position += self.velocity*dt
+                new_position[0] = self.position[0]
         elif stage:
             if new_position[1]<=30:
-                self.position[1]= self.position[1]
+                new_position[1]= self.position[1]
             elif new_position[0] <=30:
-                    self.position[0] = self.position[0]
+                    new_position[0] = self.position[0]
             elif new_position[0] >=960:
-                    self.position[0] = self.position[0]
-            else:
-                self.position += self.velocity*dt
-            
-        else:
-            self.position += self.velocity*dt
-
+                    new_position[0] = self.position[0]
+        self.position = new_position
 
 
 
