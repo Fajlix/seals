@@ -7,7 +7,7 @@ Defines different agents e.g, human, maybe in the future more agent e.g police /
 class Agent:
     ''' Defines a agent'''
 
-    def __init__(self, x, y, attractive_force_magnitude, mass=70, size=2, p_max=1, area=1, health=100):
+    def __init__(self, x, y, attractive_force_magnitude, mass=70, size=2, p_max=2, area=1, health=100):
         self.position = np.array([float(x),float(y)])
         self.mass = mass
         self.velocity = np.array([0.0, 0.0])
@@ -47,15 +47,17 @@ class Agent:
             #print(max_pressure)
         if(pressure > self.p_max):
             #TODO DAMAGE SHOULD NOT BE A CONSTANT!
-            damage = 10*dt*pressure/self.p_max
+            damage = 1*dt*pressure*0.005/self.p_max
+            
             self.health -= damage
             if(self.health <= 0):
                 #print("Agent died")
                 self.alive = False
-        elif(self.health < self.max_health):
+        if(self.health < self.max_health):
             #TODO HEALING SHOULD NOT BE A CONSTANT!
-            healing = 0.1*dt
+            healing = 2*dt
             healing = np.min([self.health + healing,self.max_health])
+            self.health = healing
     def step(self,dt,stage,split):
         self.external_forces = np.array(self.external_forces)
         # make sure that the external forces are atleast 2D

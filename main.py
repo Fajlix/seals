@@ -9,24 +9,31 @@ from environment import *
 import random
 import multiprocessing as mp
 from numpy import random
+import matplotlib.pyplot as plt
+
+
+import numpy as np
 
 # Booleans:
 agent_individual_mass = False
 agent_individual_size = False
 stage = True
-split= True 
+split= False
 variable_attraction=True
 
 
 # Variables
-
-no_of_agents = 100
+dead_list=[]
+time_list=[]
+no_of_agents = 1000
 
 height_of_window, width_of_window = 1000, 1000
 
 
 def run():
-
+    
+    time_st = 0
+    no_of_dead_agents = 0
     agents = []
 
     if agent_individual_mass:
@@ -40,7 +47,6 @@ def run():
         size = random.normal(loc=0.42, scale=0.05, size=no_of_agents)  # Mean = 42cm, Std = 5cm, feel free to change
     else:
         size = np.full(no_of_agents, 2)
-    
     if stage and not split:
         for i in range(no_of_agents):
             x = random.randint(50, width_of_window - 50)
@@ -54,7 +60,6 @@ def run():
                 agents.append(Agent(x, y, attraction,mass[i], size[i]))
             else:
                 agents.append(Agent(x, y, 5,mass[i], size[i]))
-
     elif stage and split:
         for i in range(int(no_of_agents/2)):
             x = random.randint(50, width_of_window - 550)
@@ -79,7 +84,6 @@ def run():
                 agents.append(Agent(x, y, attraction,mass[i], size[i]))
             else:
                 agents.append(Agent(x, y, 5,mass[i], size[i]))
-
     else:
         for i in range(no_of_agents):
             x = random.randint(8/2, width_of_window - 8/2)
@@ -93,40 +97,44 @@ def run():
                 agents.append(Agent(x, y, attraction,mass[i], size[i]))
             else:
                 agents.append(Agent(x, y, 5,mass[i], size[i]))
-
-    
-
-
     env = Environment(agents,stage,split)
-
-
-
     graphic = Graphics(width_of_window, height_of_window)
-
     graphic.drawSimulation(env.getAgentPositions(), env.getAgentHealth(), stage, split)
+
+
 
 
     running = True
     last_update_time = 0
-    while running:
+    while running and time_st<10:
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
-        env.update()
+        no_of_dead_agents = no_of_dead_agents + env.update()
         if env.time - last_update_time > 0.5:
-
-            # if stage and not split:    
-            #     graphic.drawHuman_stage(env.getAgentPositions())
-            # elif stage and split:
-            #     graphic.drawHuman_stage_split(env.getAgentPositions())
-            # else:
-            #     graphic.drawHuman(env.getAgentInfo())
-
+            time_st = time_st + 1
+            time_list.append(time_st)
+            dead_list.append(no_of_dead_agents)
             graphic.drawSimulation(env.getAgentPositions(), env.getAgentHealth(), stage, split)
 
             last_update_time = env.time
+            
+    pygame.display.quit()
+    pygame.quit()
+    
+    plt.plot(time_list, dead_list, color ='r')
+    plt.title(str(no_of_agents)+ " agents", fontsize=20)
+    plt.xlabel("time steps", fontsize=15)
+    plt.ylabel("Number of dead agents",fontsize=15)
+    plt.ylim(bottom=0)
+    plt.show()
+   
+
+      
+
+
 
 if __name__ == "__main__":
     run()
