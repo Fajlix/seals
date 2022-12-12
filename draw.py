@@ -53,6 +53,8 @@ class Graphics:
         for p in self.pixels:
             p.update()
         pygame.display.flip()
+        # save image
+        pygame.image.save(self.screen, f"images/{str(round(time,1))}.png")
 
 
 

@@ -56,7 +56,7 @@ def run():
                 x = random.randint(50, width_of_window - 50)
                 y = random.randint(50, height_of_window - 50)
             if variable_attraction:
-                attraction = np.random.randint(4, high=15, size=None, dtype=int)
+                attraction = np.random.randint(3, high=12, size=None, dtype=int)
                 agents.append(Agent(x, y, attraction,mass[i], size[i]))
             else:
                 agents.append(Agent(x, y, 5,mass[i], size[i]))
