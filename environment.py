@@ -49,6 +49,7 @@ class Environment:
             
 
     def update(self):
+        dead=0
         # remove agents that are not alive
         self.agents = [agent for agent in self.agents if agent.alive]
         # set the external forces to zero
@@ -61,7 +62,11 @@ class Environment:
         #print(listOfCollisions)
         for agent in self.agents:
             agent.step(self.dt,self.stage,self.split)
+            if not agent.alive:
+                dead = dead+1
+
         self.time += self.dt
+        return dead
 
     def getAgentPositions(self):
         return np.array([agent.position for agent in self.agents])
