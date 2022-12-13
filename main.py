@@ -7,7 +7,6 @@ from draw import *
 from crowdPhysics import *
 from environment import *
 import random
-import multiprocessing as mp
 from numpy import random
 import matplotlib.pyplot as plt
 
@@ -18,14 +17,14 @@ import numpy as np
 agent_individual_mass = False
 agent_individual_size = False
 stage = True
-split = False
+split = True
 variable_attraction=True
 
 
 # Variables
 dead_list=[]
 time_list=[]
-no_of_agents = 500
+no_of_agents = 1000
 
 height_of_window, width_of_window = 1000, 1000
 
@@ -56,7 +55,7 @@ def run():
                 x = random.randint(50, width_of_window - 50)
                 y = random.randint(50, height_of_window - 50)
             if variable_attraction:
-                attraction = np.random.randint(3, high=12, size=None, dtype=int)
+                attraction = np.random.randint(3, high=10, size=None, dtype=int)
                 agents.append(Agent(x, y, attraction,mass[i], size[i]))
             else:
                 agents.append(Agent(x, y, 5,mass[i], size[i]))
@@ -126,7 +125,8 @@ def run():
     plt.xlabel("time steps", fontsize=15)
     plt.ylabel("Number of dead agents",fontsize=15)
     plt.ylim(bottom=0)
-    plt.show()
+    #save the plot
+    plt.savefig("plot.png")
    
 if __name__ == "__main__":
     run()

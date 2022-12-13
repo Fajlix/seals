@@ -7,7 +7,7 @@ Defines different agents e.g, human, maybe in the future more agent e.g police /
 class Agent:
     ''' Defines a agent'''
 
-    def __init__(self, x, y, attractive_force_magnitude, mass=70, size=2, p_max=2, area=1, health=100):
+    def __init__(self, x, y, attractive_force_magnitude, mass=70, size=2, p_max=4, area=1, health=100):
         self.position = np.array([float(x),float(y)])
         self.mass = mass
         self.velocity = np.array([0.0, 0.0])
@@ -47,7 +47,7 @@ class Agent:
             #print(max_pressure)
         if(pressure > self.p_max):
             #TODO DAMAGE SHOULD NOT BE A CONSTANT!
-            damage = 1*dt*pressure*0.01/self.p_max
+            damage = 1*dt*pressure*0.02/self.p_max
             
             self.health -= damage
             if(self.health <= 0):
@@ -55,7 +55,7 @@ class Agent:
                 self.alive = False
         if(self.health < self.max_health):
             #TODO HEALING SHOULD NOT BE A CONSTANT!
-            healing = 1.5*dt
+            healing = 2*dt
             healing = np.min([self.health + healing,self.max_health])
             self.health = healing
     def step(self,dt,stage,split):
@@ -82,14 +82,14 @@ class Agent:
         if stage and split:  
             if new_position[1]<=30:
                 new_position[1]= self.position[1]
-            elif 515>new_position[0]>485:
+            if 515>new_position[0]>485:
                 new_position[0] = self.position[0]
         elif stage:
             if new_position[1]<=30:
                 new_position[1]= self.position[1]
-            elif new_position[0] <=30:
+            if new_position[0] <=30:
                     new_position[0] = self.position[0]
-            elif new_position[0] >=960:
+            if new_position[0] >=960:
                     new_position[0] = self.position[0]
         self.position = new_position
 
